@@ -1,12 +1,13 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 
-namespace BankingApi.EventReceiver
+namespace BankingApi.EventReceiver;
+
+public class BankingApiDbContext(DbContextOptions<BankingApiDbContext> options, IConfiguration config)
+    : DbContext(options)
 {
-    public class BankingApiDbContext : DbContext
-    {
-        public DbSet<BankAccount> BankAccounts { get; set; }
+    public DbSet<BankAccount> BankAccounts { get; set; }
 
-        protected override void OnConfiguring(DbContextOptionsBuilder options)
-            => options.UseSqlServer("Data Source=.\\SQLEXPRESS;Initial Catalog=BankingApiTest;Integrated Security=True;TrustServerCertificate=True;");
-    }
+    protected override void OnConfiguring(DbContextOptionsBuilder options)
+        => options.UseSqlServer(config.GetConnectionString("BankingApiDb"));
 }
