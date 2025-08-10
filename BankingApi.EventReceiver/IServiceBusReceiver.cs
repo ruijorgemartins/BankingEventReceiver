@@ -1,13 +1,12 @@
-﻿namespace BankingApi.EventReceiver
-{
-    public interface IServiceBusReceiver
-    {
-        Task<EventMessage?> Peek();
+﻿using Azure.Messaging.ServiceBus;
 
-        Task Abandon(EventMessage message);
-        
-        Task Complete(EventMessage message);
-        Task ReSchedule(EventMessage message, DateTime nextAvailableTime);
-        Task MoveToDeadLetter(EventMessage message);
-    }
+namespace BankingApi.EventReceiver;
+
+public interface IServiceBusReceiver
+{
+    Task<ServiceBusReceivedMessage?> Peek(CancellationToken stoppingToken);
+    Task<Task> Abandon(ServiceBusReceivedMessage message, CancellationToken stoppingToken);
+    Task<Task> Complete(ServiceBusReceivedMessage? message, CancellationToken stoppingToken);
+    Task<Task> ReSchedule(ServiceBusReceivedMessage message, DateTimeOffset nextAvailableTime);
+    Task<Task> MoveToDeadLetter(ServiceBusReceivedMessage message);
 }

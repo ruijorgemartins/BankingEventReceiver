@@ -1,8 +1,3 @@
 ﻿namespace BankingApi.EventReceiver;
 
-public class EventMessage
-{
-    public Guid Id { get; set; }
-    public string? MessageBody { get; set; }
-    public int ProcessingCount { get; set; }
-}
+public abstract record EventMessage(Guid Id, MessageType MessageType, Guid BankAccountId, decimal Amount);
